@@ -14,6 +14,7 @@ class Result(Generic[E, T]):
     Not all methods (https://doc.rust-lang.org/std/result/enum.Result.html)
     have been implemented, only the ones that make sense in the Python context.
     """
+
     def __init__(self, is_ok: bool, value: Union[E, T], force: bool = False) -> None:
         """Do not call this constructor, use the Ok or Err class methods instead.
 
@@ -115,6 +116,21 @@ class Result(Generic[E, T]):
             return cast(T, self._value)
         else:
             return default
+
+    def expect_err(self, message: str) -> E:
+        """
+        Return the value if it is an `Err` type. Raises an `UnwrapError` if it is `Ok`.
+        """
+        if self._is_ok:
+            raise UnwrapError(message)
+        else:
+            return cast(E, self._value)
+
+    def unwrap_err(self) -> E:
+        """
+        Return the value if it is an `Err` type. Raises an `UnwrapError` if it is `Ok`.
+        """
+        return self.expect_err("Called `Result.unwrap_err()` on an `Ok` value")
 
     def map(self, op: Callable[[T], U]) -> 'Result[E, U]':
         """
