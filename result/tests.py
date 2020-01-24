@@ -114,6 +114,22 @@ def test_unwrap_or():
     assert n.unwrap_or('another_default') == 'another_default'
 
 
+def test_unwrap_err():
+    o = Ok('yay')
+    n = Err('nay')
+    assert n.unwrap_err() == 'nay'
+    with pytest.raises(UnwrapError):
+        o.unwrap_err()
+
+
+def test_expect_err():
+    o = Ok('yay')
+    n = Err('nay')
+    assert n.expect_err('hello') == 'nay'
+    with pytest.raises(UnwrapError):
+        o.expect_err('hello')
+
+
 def test_map():
     o = Ok('yay')
     n = Err('nay')
