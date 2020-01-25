@@ -11,9 +11,16 @@ Possible log types:
 - `[fixed]` for any bug fixes.
 - `[security]` to invite users to upgrade in case of vulnerabilities.
 
+## [Unreleased]
+ - [removed] Dropped support for Python 3.4
+ - [changed] Type annotations: Change parameter order
+   from `Result[E, T]` to `Result[T, E]` to match Rust/OCaml/F# (#7)
+ - ...
+
 ## [0.4.0] - 2019-04-17
 
- - [removed] Drop support for Python 2
+ - [added] Add `unwrap`, `unwrap_or` and `expect` (#9)
+ - [removed] Drop support for Python 2 and 3.3
  - [changed] Only install typing dependency for Python <3.5
 
 ## [0.3.0] - 2017-07-12
@@ -38,7 +45,9 @@ Possible log types:
 
  - Initial version
 
-[Unreleased]: https://github.com/dbrgn/result/compare/v0.3.0...HEAD
+
+[Unreleased]: https://github.com/dbrgn/result/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/dbrgn/result/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/dbrgn/result/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/dbrgn/result/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/dbrgn/result/compare/v0.2.0...v0.2.1
