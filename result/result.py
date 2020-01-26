@@ -136,6 +136,16 @@ class Result(Generic[T, E]):
         """
         return self.expect_err("Called `Result.unwrap_err()` on an `Ok` value")
 
+    def unwrap_or_else(self, op: Callable[[E], T]) -> T:
+        """
+        Return the value if it is an `Ok` type. Return the  error value mapped using
+        the passed in function if it is an `Err`.
+        """
+        if self._is_ok:
+            return cast(T, self._value)
+        else:
+            return op(cast(E, self._value))
+
     def map(self, op: Callable[[T], U]) -> 'Result[U, E]':
         """
         Return `Ok` with original value mapped to a new value using the passed
@@ -171,6 +181,26 @@ class Result(Generic[T, E]):
             return Ok(cast(T, self._value))
         else:
             return Err(op(cast(E, self._value)))
+
+    def and_then(self, op: Callable[[T], 'Result[U, E]']) -> 'Result[U, E]':
+        """
+        Return the result of calling the passed in function if it is an `Ok`.
+        Otherwise return `Err` with the same value.
+        """
+        if self._is_ok:
+            return op(cast(T, self._value))
+        else:
+            return Err(cast(E, self._value))
+
+    def or_else(self, op: Callable[[E], 'Result[T, F]']) -> 'Result[T, F]':
+        """
+        Return the result of calling the passed in function if it is an `Err`.
+        Otherwise return `Ok` with the same value.
+        """
+        if self._is_ok:
+            return Ok(cast(T, self._value))
+        else:
+            return op(cast(E, self._value))
 
     # TODO: Implement __iter__ for destructuring
 

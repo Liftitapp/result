@@ -130,6 +130,14 @@ def test_expect_err():
         o.expect_err('hello')
 
 
+def test_unwrap_or_else():
+    o = Ok('yay')
+    n = Err('nay')
+    assert o.unwrap_or_else(lambda e: 'some_default') == 'yay'
+    assert n.unwrap_or_else(
+        lambda e: 'another_default' + e) == 'another_defaultnay'
+
+
 def test_map():
     o = Ok('yay')
     n = Err('nay')
@@ -149,3 +157,21 @@ def test_map_err():
     n = Err('nay')
     assert o.map_err(lambda e: 'hay').ok() == 'yay'
     assert n.map_err(lambda e: 'hay').err() == 'hay'
+
+
+def test_and_then():
+    o = Ok('yay')
+    n = Err('nay')
+    assert o.and_then(lambda x: Ok(x + x)).ok() == 'yayyay'
+    assert o.and_then(lambda x: Err(x)).err() == 'yay'
+    assert n.and_then(lambda x: Ok(x + x)).err() == 'nay'
+    assert n.and_then(lambda x: Err(x + x)).err() == 'nay'
+
+
+def test_or_else():
+    o = Ok('yay')
+    n = Err('nay')
+    assert o.or_else(lambda x: Ok(x + x)).ok() == 'yay'
+    assert o.or_else(lambda x: Err(x)).ok() == 'yay'
+    assert n.or_else(lambda x: Ok(x + x)).ok() == 'naynay'
+    assert n.or_else(lambda x: Err(x + x)).err() == 'naynay'
